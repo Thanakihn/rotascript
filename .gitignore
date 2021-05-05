@@ -1,0 +1,4 @@
+#Les fichiers de test et les fichiers temporaires
+*.csv
+*test*
+*.temp
