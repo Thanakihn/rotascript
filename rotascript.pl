@@ -19,7 +19,6 @@ my @table;
 my $filename;
 
 my $input=$ARGV[0];
-print "$input";
 
 
 main();
@@ -40,7 +39,8 @@ sub main {
 	load_table($input);
 # puis les fichiers sont réassemblés
 	build_table();
-# exportation de la nouvelle table
+# nettoyage des fichiers temporaires
+	clear_temp();
 	
 
 
@@ -61,7 +61,9 @@ sub load_param {
 	$separatorDecIn = ',';
 	$separatorDecOut = '.';
 	$nbFiles = 0;
-	$filename = "NomDeDebug.csv";
+	my $tempName =$input;
+	$tempName =~ s/.csv//g;
+	$filename = "$tempName-reversed.csv"; 
 }
 
 sub load_table { 
@@ -86,7 +88,7 @@ sub load_table {
 }
 
 sub Temp {
-        print @_; 
+	#        print @_; 
         open(my $FH, '>>', "./$_[1].temp") or die "Impossible d'ouvir le fichier temporaire";
         print $FH $_[0];
         close $FH;
@@ -96,6 +98,7 @@ sub Temp {
 sub verif_input{
 	if(1!=1){
 		die "1!=1";
+		#C'est rigolo de faire des vérifications inutiles en attendant l'implémentation des vrais vérifications
 	}
 }
 
@@ -112,7 +115,11 @@ sub build_table{
 	close $WR;
 }
 
-
+sub clear_temp{
+	for my $i (0 .. $nbFiles-1){
+		unlink "./ligne$i.temp" or die "Impossible de supprimer le fichier temporaire ligne$i.temp";
+	}
+}	
 
 
 
