@@ -33,10 +33,12 @@ sub main {
 	verif_input($input);
 # Gestion des flags
 # TODO
+
 	load_param();
 
 # Pour renverser la table, on lit chaque ligne et chaque colonne est placée dans un fichier temporaire
 	load_table($input);
+
 # puis les fichiers sont réassemblés
 	build_table();
 # nettoyage des fichiers temporaires
@@ -50,12 +52,15 @@ sub main {
 
 
 sub presentation {
-	print "|--------------------|\n";
-	print "|     Rotascript     |\n";
-	print "|--------------------|\n";
+	print "\n   |--------------------|\n";
+	print "   |     Rotascript     |\n";
+	print "   |--------------------|\n\n\n";
 }
 
 sub load_param {
+	print "-> Chargement des paramètres sélectionnés\n";
+#	TODO ajouter le traitement des paramètres par flag
+	print "-> PARAMÈTRES PAR DÉFAUT\n";
 	$separatorIn = ',';
 	$separatorOut = ' ';
 	$separatorDecIn = ',';
@@ -63,11 +68,13 @@ sub load_param {
 	$nbFiles = 0;
 	my $tempName =$input;
 	$tempName =~ s/.csv//g;
-	$filename = "$tempName-reversed.csv"; 
+	$filename = "$tempName-reversed.dat";
+	print "-> Fin de chargement des paramètres\n";
+        print "-----------------------------\n";
 }
 
 sub load_table { 
-	print "loading table $_[0]\n";
+	print "-> Chargement de la table $_[0]\n";
 	my $file = $_[0];
 	open(my $data, '<', $file) or die "Impossible d'ouvrir le fichier '$file'\n";
 	while (my $line = <$data>) {
@@ -85,11 +92,14 @@ sub load_table {
 		}
 	}
 	close $data;
+        print "-> Fin de chargement de la table\n";
+        print "-----------------------------\n";
+
 }
 
 sub Temp {
 	#        print @_; 
-        open(my $FH, '>>', "./$_[1].temp") or die "Impossible d'ouvir le fichier temporaire";
+        open(my $FH, '>>', "./$_[1].temp") or die "Impossible d'ouvir le fichier temporaire\n";
         print $FH $_[0];
         close $FH;
 
@@ -103,9 +113,10 @@ sub verif_input{
 }
 
 sub build_table{
-	open(my $WR, '>>', "./$filename") or die "Impossible d'ouvir le fichier d'impression";
+	print "-> Début de la construction de la table\n";
+	open(my $WR, '>>', "./$filename") or die "Impossible d'ouvir le fichier d'impression\n";
 	for my $i (0 .. $nbFiles-1){
-		open(my $RD, '<', "./ligne$i.temp") or die "Impossible d'ouvrir le fichier temporaire ligne$i.temp";
+		open(my $RD, '<', "./ligne$i.temp") or die "Impossible d'ouvrir le fichier temporaire ligne$i.temp\n";
 		while (my $line = <$RD>) {
 			chomp $line;
 			print $WR "$line\n";
@@ -113,11 +124,14 @@ sub build_table{
 		close $RD;
 	}
 	close $WR;
+	print "-> Table $filename construite\n";
+        print "-----------------------------\n";
+
 }
 
 sub clear_temp{
 	for my $i (0 .. $nbFiles-1){
-		unlink "./ligne$i.temp" or die "Impossible de supprimer le fichier temporaire ligne$i.temp";
+		unlink "./ligne$i.temp" or die "Impossible de supprimer le fichier temporaire ligne$i.temp\n";
 	}
 }	
 
